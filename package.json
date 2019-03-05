@@ -1,0 +1,35 @@
+{
+  "name": "e-mail-voting",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CuihuaDong/E-mail-Voting.git"
+  },
+  "author": "djh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CuihuaDong/E-mail-Voting/issues"
+  },
+  "homepage": "https://github.com/CuihuaDong/E-mail-Voting#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "config": "^3.0.1",
+    "debug": "^4.1.1",
+    "eslint": "^5.15.0",
+    "jsonwebtoken": "^8.5.0",
+    "koa": "^2.7.0",
+    "koa-adapter-bluebird": "0.0.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "mocha": "^6.0.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.4.17",
+    "require-all": "^3.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "mongo":{
+        "uri":"mongodb://localhost:27017",
+        "options":{},
+        "dbname":"product"
+    },
+    "cookie": {
+        "ckname": "MY_COOKIE",
+        "ckexpiration": "600000"
+      }
+}
