@@ -22,15 +22,14 @@ module.exports = (router) => {
              name,
              email,
              encodePass,
-             code
+             code,
+             date: new Date()
          });
          await sendMail({
-            {
                 from: '"Fred Foo 👻" <foo@example.com>', // sender address
-                to: "bar@example.com, baz@example.com", // list of receivers
-                subject: "Hello ✔", // Subject line
-                text: "Hello world?", // plain text body
-                html: "<b>Hello world?</b>"
+                to: email, // list of receivers
+                subject: "激活邮箱", // Subject line
+                text: `点击激活：<a href="http://localhost:3000/checkCode?name=${name}&code=${code}"></a>`, // plain text body
          })
          ctx.return(200,user,'success')
      } )
@@ -54,17 +53,15 @@ module.exports = (router) => {
     router.post('/:id',async ctx => {         
         const {email,votes} = ctx.request.body;
         const user  = await userModel.findOne({email});
-        if(!user) return ctx.return(404,'用户不存在','faild');
+        if(!user.isValid) return ctx.return(209,'邮箱无效')
         const candidate = await candidateModel.findOne({voters:email})
                         .populate({path:'activity', select:'startDate endDate'});
         if(candidate) return ctx.return(208,'不能重复投票','faild');
+
         const { startDate, endDate } = candidate.activity;
         const today = new Date();
         if(taday>endDate || today<startDate) return ctx.return(209,`不在投票范围内${startDate}-${endDate}`,'faild')
-         //await candidateModel.update({_id: ctx.params.id},{ '$push':{ voters:email } }) 
-         candidate.totalNumOfVotes = candidate.totalNumOfVotes + votes;
-         candidate.voters = candidate.voters.push(email)
-         candidate.save();
+         await candidateModel.update({_id: ctx.params.id},{ '$push':{ voters:email } , totalNumOfVotes:candidate.totalNumOfVotes + votes}) 
         ctx.return(200,candidate,'success')
         
     })
