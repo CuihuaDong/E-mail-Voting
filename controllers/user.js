@@ -3,7 +3,8 @@ const candidateModel = require("../model/candidate")
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { ckexpiration, ckname } = config.get('cookie');
-const moment = require('moment')
+const moment = require('moment');
+const sendMail = require('../libs/service');
 
 
 module.exports = (router) => {
@@ -16,11 +17,21 @@ module.exports = (router) => {
          if(!isCorrectEmail) return ctx.return(403,'邮箱格式错误','faild')         
          if(user) return ctx.return(403,'邮箱已被注册','faild');
          const encodePass = await bcrypt.hash(password,10);
+         const code = Math.floor(Math.random()*(9999-1000))+min;
         const user =  await userModel.create({
              name,
              email,
-             encodePass
+             encodePass,
+             code
          });
+         await sendMail({
+            {
+                from: '"Fred Foo 👻" <foo@example.com>', // sender address
+                to: "bar@example.com, baz@example.com", // list of receivers
+                subject: "Hello ✔", // Subject line
+                text: "Hello world?", // plain text body
+                html: "<b>Hello world?</b>"
+         })
          ctx.return(200,user,'success')
      } )
      //登陆

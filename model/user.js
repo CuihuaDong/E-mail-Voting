@@ -10,8 +10,13 @@ const {
           index: true,
           unique: true
       },
-      passowrd: String,
-      email: String
+      passWord: String,
+      email: String,
+      date: String,
+      isValid: {
+          type: Boolean,
+          default: false
+      }
   })
   
   const user = db.model('user',userSchema);
