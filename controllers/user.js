@@ -1,4 +1,5 @@
-const userModel = require("../model/user")
+const userModel = require("../model/user");
+const candidateModel = require("../model/candidate")
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { ckexpiration, ckname } = config.get('cookie');
@@ -40,9 +41,20 @@ module.exports = (router) => {
      })
     // 投票
     router.post('/:id',async ctx => {         
-        const { activity,email} = ctx.request.body;
-        const userinfo = await userModel.findOne({email})         
-        ctx.return(200,userinfo,'success')
+        const {email,votes} = ctx.request.body;
+        const user  = await userModel.findOne({email});
+        if(!user) return ctx.return(404,'用户不存在','faild');
+        const candidate = await candidateModel.findOne({voters:email})
+                        .populate({path:'activity', select:'startDate endDate'});
+        if(candidate) return ctx.return(208,'不能重复投票','faild');
+        const { startDate, endDate } = candidate.activity;
+        const today = new Date();
+        if(taday>endDate || today<startDate) return ctx.return(209,`不在投票范围内${startDate}-${endDate}`,'faild')
+         //await candidateModel.update({_id: ctx.params.id},{ '$push':{ voters:email } }) 
+         candidate.totalNumOfVotes = candidate.totalNumOfVotes + votes;
+         candidate.voters = candidate.voters.push(email)
+         candidate.save();
+        ctx.return(200,candidate,'success')
         
     })
 }

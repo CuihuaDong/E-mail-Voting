@@ -3,7 +3,7 @@ const mongoose  = require('mongoose');
 const { Schema } = mongoose;
 const activitySchema = new Schema({
     name: String,
-    start_date: Date,
+    startDate: Date,
     endDate: Date
 },{
     timestamps: { createdAt: 'create_date', updatedAt: 'update_date' },
