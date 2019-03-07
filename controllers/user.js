@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const { ckexpiration, ckname } = config.get('cookie');
 const moment = require('moment');
 const sendMail = require('../libs/service');
+const  { LoginAccessRequired } = require('../libs/middleware/auth');
 
 
 module.exports = (router) => {
@@ -41,7 +42,7 @@ module.exports = (router) => {
          const isCorrectPass = await bcrypt.bcryptcompareSync(user.password,password)
          if(!isCorrectPass) return ctx.return(401,'密码错误','faild');
          const expireAt = moment().add(ckexpiration,'seconds').toDate();
-         const cookie = jwt.sign({name},'abcdef',{ algorithm: 'RS256', expiresIn: `${ckexpiration} seconds` })
+         const cookie = jwt.sign({name},'  ',{ algorithm: 'RS256', expiresIn: `${ckexpiration} seconds` })
          ctx.cookies.set(ckname,cookie, {
              expires: new Date(expireAt),
              signed:false,
@@ -50,7 +51,7 @@ module.exports = (router) => {
          ctx.return(200,'登陆成功','success');
      })
     // 投票
-    router.post('/:id',async ctx => {         
+    router.post('/:id',LoginAccessRequired,async ctx => {         
         const {email,votes} = ctx.request.body;
         const user  = await userModel.findOne({email});
         if(!user.isValid) return ctx.return(209,'邮箱无效')

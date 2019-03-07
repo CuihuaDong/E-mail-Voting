@@ -14,6 +14,10 @@ const administratorSchema = new Schema({
     activity:{
         type: Schema.Types.ObjectId,
         ref: 'activity',
+    },
+    join: {
+        type: Boolean,
+        default: true
     }
 
 },{   

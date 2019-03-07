@@ -19,6 +19,7 @@
   "homepage": "https://github.com/CuihuaDong/E-mail-Voting#readme",
   "dependencies": {
     "bcrypt": "^3.0.4",
+    "bluebird": "^3.5.3",
     "config": "^3.0.1",
     "debug": "^4.1.1",
     "eslint": "^5.15.0",

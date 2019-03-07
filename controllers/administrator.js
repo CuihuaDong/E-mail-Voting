@@ -1,4 +1,5 @@
-const candidateModel = require('../model/candidate')
+const candidateModel = require('../model/candidate');
+const activityModel = require('../model/activity');
 
 module.exports = async (router) => {
     router.post('/',async ctx => {
@@ -27,6 +28,22 @@ module.exports = async (router) => {
          Object.assign(candidate, ctx.request.body);
          await candidate.save();
         
-        ctx.return(200,'操作成功')
+        ctx.return(200,'操作成功','success');
+    });
+    
+    router.get('/:id', async ctx => {
+        const result = await candidateModel.find({activity: ctx.params.id});
+        ctx.return(200,result,'success');
     })
+    
+    router.post('/activity/:id', async ctx => {
+        const activity = await activityModel.findById(ctx.params.id);
+        if(!activity) return ctx.return(404,'该选举活动不存在');
+        const { startDate, endDate }  = ctx.request.body;
+        if(endDate<startDate)  return ctx.return(209,'结束日期不能小于开始日期');
+        Object.assign(activity,ctx.request.body);
+        await activity.save();
+        ctx.return(200,'编辑成功');
+    })
+
 }
